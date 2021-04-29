@@ -7,7 +7,7 @@ import pytz
 import time
 
 if __name__ == '__main__':
-    if os.getenv('DYNO') and os.get('HOME') == '/app':
+    if os.getenv('DYNO') and os.getenv('HOME') == '/app':
         app = hostServer('Automated Carousell DB')
     else:
         app = hostServer()

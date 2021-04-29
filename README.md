@@ -31,7 +31,7 @@ Requirements :
 
 - exceptions raised not reflected if code exits early
 - data migration in DB due to column changes
-- to_prod script
+- to_prod script + use production server (eg. waiteress)
 
 ### Old
 
