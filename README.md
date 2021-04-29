@@ -1,6 +1,12 @@
 # AutoCarousellTracker
 
 Current Build: v6
+Requirements :
+- gspread
+- oauth2client
+- pandas
+- cryptography
+
 
 ## Changelogs
 
@@ -9,14 +15,15 @@ Current Build: v6
 - v3 : Moved "update" after "results search" + Improved accuracy of results (index didn't change after exclusion)
 - v4 : Improved accuracy of delay (minus runtime from delay) + Included updates for "other" sheets
 - v5 : Added on/off button
+- v6 : Added "meet-up" column + Main code refactoring + Added ENV
 
 ## Improvements
 
 - "update-all" for top/lastest \_ listings
 - integrate with Telegram/Slack
 - (at v3) new listing status updates immediately (wait an hour previously) <- Resolved
-- (v6) breaking down main code + add "meet-up" column
-- (v7) client_secret & key in ENV
+- (v6) breaking down main code + add "meet-up" column + client_secret & key in ENV
+- (v7) transition from worker->web to reduce up-time
 
 ## Bugs / Non-Bugs
 
@@ -38,9 +45,6 @@ Current Build: v6
   - geocode.xyz
   - onemap.gov.sg
 
-### SETUP
+### V7 (shift to web-based)
 
-- gspread
-- oauth2client
-- pandas
-- cryptography
+- zapier/airflow scheduler -> run telebot -> receive info from telegram -> run search
