@@ -1,7 +1,3 @@
-# secrets
-client_secret.json
-credentials.json
-
 # pycache
 *.pyc
 
@@ -9,4 +5,5 @@ credentials.json
 *.ipynb
 
 # venv
-.*
+.config
+.venv

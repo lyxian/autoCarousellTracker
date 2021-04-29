@@ -1,12 +1,12 @@
 # AutoCarousellTracker
 
-Current Build: v6
+Current Build: v7
 Requirements :
+
 - gspread
 - oauth2client
 - pandas
 - cryptography
-
 
 ## Changelogs
 
@@ -31,6 +31,7 @@ Requirements :
 
 - exceptions raised not reflected if code exits early
 - data migration in DB due to column changes
+- to_prod script
 
 ### Old
 
@@ -48,3 +49,8 @@ Requirements :
 ### V7 (shift to web-based)
 
 - zapier/airflow scheduler -> run telebot -> receive info from telegram -> run search
+- code architect :
+  - main > run server object
+    - Server > return server object
+    - Google
+    - Carousell
