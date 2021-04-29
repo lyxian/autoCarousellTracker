@@ -1,1 +1,1 @@
-worker: python AutoCarousell.py
+web: python AutoCarousell.py
