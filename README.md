@@ -16,6 +16,7 @@ Current Build: v5
 - integrate with Telegram/Slack
 - (at v3) new listing status updates immediately (wait an hour previously) <- Resolved
 - (v6) breaking down main code + add "meet-up" column
+- (v7) client_secret & key in ENV
 
 ## Bugs / Non-Bugs
 
@@ -35,3 +36,10 @@ Current Build: v5
   - api.bigdatacloud > reverse-geocode-client
   - geocode.xyz
   - onemap.gov.sg
+
+### SETUP
+
+- gspread
+- oauth2client
+- pandas
+- cryptography
