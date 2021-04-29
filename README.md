@@ -1,6 +1,6 @@
 # AutoCarousellTracker
 
-Current Build: v5
+Current Build: v6
 
 ## Changelogs
 
