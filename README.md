@@ -23,6 +23,7 @@ Current Build: v6
 ### New
 
 - exceptions raised not reflected if code exits early
+- data migration in DB due to column changes
 
 ### Old
 
