@@ -1,6 +1,7 @@
 # AutoCarousellTracker
 
 Current Build: v7
+
 Requirements :
 
 - gspread
@@ -16,18 +17,20 @@ Requirements :
 - v4 : Improved accuracy of delay (minus runtime from delay) + Included updates for "other" sheets
 - v5 : Added on/off button
 - v6 : Added "meet-up" column + Main code refactoring + Added ENV
+- v7 : Transition from `worker`->`web`
 
 ## Improvements
 
-- "update-all" for top/lastest \_ listings
+- "update-all" for top/latest listings
 - integrate with Telegram/Slack
 - (at v3) new listing status updates immediately (wait an hour previously) <- Resolved
-- (v6) breaking down main code + add "meet-up" column + client_secret & key in ENV
-- (v7) transition from worker->web to reduce up-time
+- v6 - breaking down main code + add "meet-up" column + client_secret & key in ENV
+- v7 - transition from worker->web to reduce up-time
+- v8 - configure routing to include params
 
 ## Bugs / Non-Bugs
 
-### New
+### New (\*\*\*)
 
 - exceptions raised not reflected if code exits early
 - data migration in DB due to column changes

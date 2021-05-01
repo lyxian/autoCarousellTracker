@@ -8,7 +8,8 @@ import time
 
 if __name__ == '__main__':
     if os.getenv('DYNO') and os.getenv('HOME') == '/app':
-        app = hostServer('Automated Carousell DB')
+        #app = hostServer('Automated Carousell DB')
+        app = hostServer('Automated Carousell-Airflow')
     else:
         app = hostServer()
     app.run(host='0.0.0.0', port=int(os.environ.get('PORT',5000)))
