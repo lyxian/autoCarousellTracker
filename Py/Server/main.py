@@ -120,16 +120,22 @@ def start(wb_name):
         return True, delay
 
 # not required for WEB : PUBLIC_URL + cmd
-def hostServer(wb_name='Automated Carousell-Staging'):
+def hostServer(wb_name=''):
     app = Flask(__name__)
     # PUBLIC_URL = 'https://262e7dc94ddb.ngrok.io/'
 
     @app.route('/start')
     def _start():
         while True:
+            if not wb_name:
+                source = request.args.get('source', '')
+                if source not in ['Airflow', 'Zapier']:
+                    source = 'Staging'
+                wb_name = 'Automated Carousell-{}'
+            
             try:
                 print('Starting app...')
-                success, cmd = start(wb_name) 
+                success, cmd = start(wb_name.format(source))
                 if success:
                     print('--Success--')
                     return '--Success--', 200
@@ -160,6 +166,15 @@ def hostServer(wb_name='Automated Carousell-Staging'):
             return '--End--', 0
         except:
             pass
+
+    @app.route('/test')
+    def _test():
+        try:
+            print('testing')
+            return '--End--', 0
+        except Exception as e:
+            print(f'{e}')
+            return '--Error--', 400
 
     return app
     # app.run(host='0.0.0.0', port=int(os.environ.get('PORT',5000)))

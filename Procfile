@@ -1,1 +1,1 @@
-web: python AutoCarousell.py
+web: python AutoCarousell_staging.py

@@ -26,7 +26,7 @@ Requirements :
 - (at v3) new listing status updates immediately (wait an hour previously) <- Resolved
 - v6 - breaking down main code + add "meet-up" column + client_secret & key in ENV
 - v7 - transition from worker->web to reduce up-time
-- v8 - configure routing to include params
+- v8 - configure routing to include params + exception not propagated to logs
 
 ## Bugs / Non-Bugs
 
