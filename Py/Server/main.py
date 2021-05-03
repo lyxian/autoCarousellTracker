@@ -127,15 +127,17 @@ def hostServer(wb_name=''):
     @app.route('/start')
     def _start():
         while True:
-            if not wb_name:
-                source = request.args.get('source', '')
-                if source not in ['Airflow', 'Zapier']:
-                    source = 'Staging'
-                wb_name = 'Automated Carousell-{}'
-            
             try:
+                if wb_name == '':
+                    source = request.args.get('source', '')
+                    if source not in ['Airflow', 'Zapier']:
+                        source = 'Staging'
+                else:
+                    source = wb_name
+                target = f'Automated Carousell-{source}'
+                
                 print('Starting app...')
-                success, cmd = start(wb_name.format(source))
+                success, cmd = start(target)
                 if success:
                     print('--Success--')
                     return '--Success--', 200
