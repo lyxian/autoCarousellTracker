@@ -9,4 +9,5 @@ credentials.json
 *.ipynb
 
 # venv
-.*
+.config
+.venv

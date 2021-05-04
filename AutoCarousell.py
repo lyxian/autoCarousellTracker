@@ -9,7 +9,7 @@ import time
 def start():
     check_interval = 3  # hours
     client = spreadSheetClient()
-    wb = openWorkbook_name(client, 'Automated Carousell DB')
+    wb = openWorkbook_name(client, 'Automated Carousell-Airflow')
 
     base_url_filter = 'https://www.carousell.sg/api-service/filter/search/3.3/products/'
     settings_sheet = wb.worksheet('Settings')

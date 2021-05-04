@@ -2,11 +2,11 @@
 
 Current Build: v6
 Requirements :
+
 - gspread
 - oauth2client
 - pandas
 - cryptography
-
 
 ## Changelogs
 
@@ -21,9 +21,10 @@ Requirements :
 
 - "update-all" for top/lastest \_ listings
 - integrate with Telegram/Slack
+- add script to automate setup
 - (at v3) new listing status updates immediately (wait an hour previously) <- Resolved
 - (v6) breaking down main code + add "meet-up" column + client_secret & key in ENV
-- (v7) transition from worker->web to reduce up-time
+- (v7b) alternating workers to distribute dyno hours
 
 ## Bugs / Non-Bugs
 
@@ -45,6 +46,9 @@ Requirements :
   - geocode.xyz
   - onemap.gov.sg
 
-### V7 (shift to web-based)
+### V7b (switch app via API)
 
-- zapier/airflow scheduler -> run telebot -> receive info from telegram -> run search
+- create heroku credentials
+- test API
+- test sample code
+- deploy
