@@ -117,7 +117,7 @@ if __name__ == '__main__':
     while True:
         # Perform Handover
         print(f'Date now is: {datetime.now().day}...')
-        if datetime.now().day % 2 == 0:
+        if datetime.now().day % 2 == 1:
             next_app = App(f'yxian-carousell-{2-(order+1)%2}')
             next_app.enable(True)
             curr_app = App(f'yxian-carousell-{order}')
