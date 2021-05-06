@@ -1,7 +1,11 @@
 # AutoCarousellTracker
 
-Current Build: v6
-Requirements :
+Current Build/Branch:
+
+- first/second : 2x Worker
+- v7 : Zapier-Web
+
+Requirements:
 
 - gspread
 - oauth2client
