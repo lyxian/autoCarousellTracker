@@ -115,7 +115,7 @@ def start():
 if __name__ == '__main__':
     order = 1 # 1/2
     while True:
-        # Perform Handover
+        # Perform Handover if even
         print(f'Date now is: {datetime.now().day}...')
         if datetime.now().day % 2 == order % 2:
             next_app = App(f'yxian-carousell-{2-(order+1)%2}')
@@ -128,7 +128,7 @@ if __name__ == '__main__':
         else:
             t_1 = time.perf_counter()
             success, cmd = start()
-            if 'staging' in __file__:
+            if 'XXXstagingXXX' in __file__:
                 print(success, cmd)
             else:
                 if success:
