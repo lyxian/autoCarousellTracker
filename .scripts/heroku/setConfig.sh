@@ -10,7 +10,7 @@ then
 else
     key=$(echo $file | cut -d "." -f 1 | cut -d "_" -f 2 | tr a-z A-Z)_KEY
 fi 
-if [[ $(heroku config:set --app $(cat whoami) $key=$(cat .config/$file) $key) ]]
+if [[ $(heroku config:set --app $(cat whoami) $key=$(cat .config/$file)) ]]
 then
 echo "Sucess...$key set"
 else
