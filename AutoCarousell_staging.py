@@ -115,7 +115,7 @@ def start():
 if __name__ == '__main__':
     order = 1 # 1/2
     while True:
-        # Perform Handover if even
+        # Perform Handover on Odd-days
         print(f'Date now is: {datetime.now().day}...')
         if datetime.now().day % 2 == order % 2:
             next_app = App(f'yxian-carousell-{2-(order+1)%2}')
