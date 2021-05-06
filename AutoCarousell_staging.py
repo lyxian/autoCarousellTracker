@@ -117,9 +117,9 @@ if __name__ == '__main__':
     while True:
         # Perform Handover
         if datetime.now().day % 2 == 0:
-            next_app = App('yxian-carousell', order)
+            next_app = App(f'yxian-carousell-{order}')
             next_app.enable(True)
-            curr_app = App('yxian-carousell', order)
+            curr_app = App(f'yxian-carousell-{order}')
             next_app.enable(False)
             
         # Execute Code

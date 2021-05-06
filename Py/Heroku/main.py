@@ -52,10 +52,10 @@ class App():
             except:
                 print(response.content)
 
-    def __init__(self, name, order):
+    def __init__(self, name):
         self.name = name
         self.url = 'https://api.heroku.com/{}'
-        self.headers = requestHeaders(order)
+        self.headers = requestHeaders(name.split('-')[-1])
         self.formationInfo()
 
     def enable(self, x: bool):
