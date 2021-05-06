@@ -113,7 +113,7 @@ def start():
 
 
 if __name__ == '__main__':
-    order = 2 # 1/2
+    order = 0 # 1/2
     while True:
         # Perform Handover
         print(f'Date now is: {datetime.now().day}...')
@@ -130,7 +130,6 @@ if __name__ == '__main__':
             success, cmd = start()
             if 'staging' in __file__:
                 print(success, cmd)
-                break
             else:
                 if success:
                     print('Success')
