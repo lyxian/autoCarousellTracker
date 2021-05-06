@@ -113,7 +113,7 @@ def start():
 
 
 if __name__ == '__main__':
-    order = 1 # 1/2
+    order = 2 # 1/2
     while True:
         # Perform Handover
         print(f'Date now is: {datetime.now().day}...')
