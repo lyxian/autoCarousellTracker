@@ -122,6 +122,7 @@ if __name__ == '__main__':
             next_app.enable(True)
             curr_app = App(f'yxian-carousell-{order}')
             curr_app.enable(False)
+            time.sleep(20)
             
         # Execute Code
         else:
