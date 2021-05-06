@@ -51,4 +51,4 @@ Requirements :
 - create heroku credentials
 - test API
 - test sample code
-- deploy
+- deploy (consider cross-account operations)

@@ -5,15 +5,15 @@ import requests
 import json
 import os
 
-def getApiKey():
+def getApiKey(order):
     key = bytes(os.getenv('KEY'), 'utf-8')
     encrypted = bytes(os.getenv('HEROKU_KEY'), 'utf-8')
-    return json.loads(Fernet(key).decrypt(encrypted))['api_key']
+    return json.loads(Fernet(key).decrypt(encrypted))[f'api_key-{order}']
 
-def requestHeaders():
+def requestHeaders(order):
     return {
         'Accept': 'application/vnd.heroku+json; version=3',
-        'Authorization': f'Bearer {getApiKey()}',
+        'Authorization': f'Bearer {getApiKey(order)}',
         'Content-Type': 'application/json',
     }
 
@@ -52,10 +52,10 @@ class App():
             except:
                 print(response.content)
 
-    def __init__(self, name):
+    def __init__(self, name, order):
         self.name = name
         self.url = 'https://api.heroku.com/{}'
-        self.headers = requestHeaders()
+        self.headers = requestHeaders(order)
         self.formationInfo()
 
     def enable(self, x: bool):
@@ -78,6 +78,6 @@ class App():
                 print(response.json())
 
 if __name__ == '__main__':
-    app = App(chooseApp())
-    # app = App('yxian--test')
-    app.enable(False)
+    # app = App(chooseApp())
+    app = App('yxian--test', 1)
+    app.enable(True)
