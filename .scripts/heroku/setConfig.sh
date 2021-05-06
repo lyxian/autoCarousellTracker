@@ -15,6 +15,5 @@ then
 echo "Sucess...$key set"
 else
 echo "Error...$key not set"
-else
 fi
 done 
