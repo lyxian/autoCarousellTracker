@@ -1,1 +1,1 @@
-worker: python AutoCarousell-staging.py
+worker: python AutoCarousell_staging.py
