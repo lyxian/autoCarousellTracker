@@ -1,5 +1,6 @@
-from Py.Google.main import *
 from Py.Carousell.main import *
+from Py.Google.main import *
+from Py.Heroku.main import *
 from datetime import datetime
 import pandas as pd
 import pytz
@@ -9,7 +10,7 @@ import time
 def start():
     check_interval = 3  # hours
     client = spreadSheetClient()
-    wb = openWorkbook_name(client, 'Automated Carousell-Staging')
+    wb = openWorkbook_name(client, 'Automated Carousell-Airflow')
 
     base_url_filter = 'https://www.carousell.sg/api-service/filter/search/3.3/products/'
     settings_sheet = wb.worksheet('Settings')
@@ -112,27 +113,37 @@ def start():
 
 
 if __name__ == '__main__':
+    order = 1 # 1/2
     while True:
-        t_1 = time.perf_counter()
-        success, cmd = start()
-        if 'staging' in __file__:
-            print(success, cmd)
-            break
+        # Perform Handover
+        if datetime.now().day % 2 == 0:
+            next_app = App('yxian-carousell', order)
+            next_app.enable(True)
+            curr_app = App('yxian-carousell', order)
+            next_app.enable(False)
+            
+        # Execute Code
         else:
-            if success:
-                print('Success')
-                runtime = time.perf_counter() - t_1
-                time.sleep(cmd*60 - runtime)
+            t_1 = time.perf_counter()
+            success, cmd = start()
+            if 'staging' in __file__:
+                print(success, cmd)
+                break
             else:
-                if cmd == 'Stop':    # Stop Code
-                    print('Program Stopped...')
-                    break
-                elif cmd == 'Wait':    # Wait 1 min
-                    print('Awaiting Query...')
-                    time.sleep(60)
-                elif cmd == 'Off':
-                    print(
-                        f'Sleeping since {datetime.strftime(datetime.now(tz=pytz.timezone("Singapore")),  "%Y-%m-%d %I:%M %p")}')
-                    time.sleep(10*60)
-                else:    # Update Failed -> Stop with msg OR Retry in 1 min
-                    break
+                if success:
+                    print('Success')
+                    runtime = time.perf_counter() - t_1
+                    time.sleep(cmd*60 - runtime)
+                else:
+                    if cmd == 'Stop':    # Stop Code
+                        print('Program Stopped...')
+                        break
+                    elif cmd == 'Wait':    # Wait 1 min
+                        print('Awaiting Query...')
+                        time.sleep(60)
+                    elif cmd == 'Off':
+                        print(
+                            f'Sleeping since {datetime.strftime(datetime.now(tz=pytz.timezone("Singapore")),  "%Y-%m-%d %I:%M %p")}')
+                        time.sleep(10*60)
+                    else:    # Update Failed -> Stop with msg OR Retry in 1 min
+                        break

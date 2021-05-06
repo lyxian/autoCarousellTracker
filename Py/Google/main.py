@@ -7,7 +7,7 @@ import os
 
 def getCredentials():
     key = bytes(os.getenv('KEY'), 'utf-8')
-    encrypted = bytes(os.getenv('CLIENT_SECRET'), 'utf-8')
+    encrypted = bytes(os.getenv('GOOGLE_KEY'), 'utf-8')
     return json.loads(Fernet(key).decrypt(encrypted))
 
 def spreadSheetClient():
