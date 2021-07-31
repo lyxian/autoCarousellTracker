@@ -21,6 +21,10 @@ Requirements:
 - v5 : Added on/off button
 - v6 : Added "meet-up" column + Main code refactoring + Added ENV
 
+**first/second**
+
+- fix : update base_url
+
 ## Improvements
 
 - "update-all" for top/lastest \_ listings
@@ -33,6 +37,14 @@ Requirements:
 ## Bugs / Non-Bugs
 
 ### New
+
+**Urgent**
+
+- check if update_status API works
+- serialized listings
+- sort listings results by date
+
+**Others**
 
 - exceptions raised not reflected if code exits early
 - data migration in DB due to column changes
