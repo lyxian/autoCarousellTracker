@@ -56,3 +56,7 @@ Requirements:
 - test API
 - test sample code
 - deploy (consider cross-account operations)
+
+## Notes
+
+- Python Runtime: 3.8.9?
