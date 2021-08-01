@@ -57,11 +57,15 @@ def listingInfo(result):
     d.update(temp)
     return d
 
+def sortListingsFromResponse(response):
+    return sorted([listing for listing in response['data']['results']], key=lambda x: x['listingCard']['overlayContent']['timestampContent']['seconds']['low'], reverse=True)
+
 def allListings(response, query, num, keywords, base_url_search):
     columns_order = ['no.', 'timestamp', 'status', 'title',
                      'url', 'price (S$)', 'state', 'body', 'meetup', 'user', 'img']
-    df = pd.DataFrame([listingInfo(i['listingCard'])
-                       for i in response['data']['results']])
+    
+    df = pd.DataFrame([listingInfo(i['listingCard']) for i in sortListingsFromResponse(response)])
+
     if keywords != ['']:
         # First Exclude
         df = df.loc[excludeListings(df, keywords), :]
@@ -73,15 +77,11 @@ def allListings(response, query, num, keywords, base_url_search):
             # base_url_search = 'https://www.carousell.sg/api-service/search/search/3.3/products/'
             response_1 = searchCarousell_cont(
                 response_1, base_url_search, requestPayload(query, num))
-            df_1 = pd.DataFrame([listingInfo(i['listingCard'])
-                                 for i in response_1['data']['results']])
+            df_1 = pd.DataFrame([listingInfo(i['listingCard']) for i in sortListingsFromResponse(response_1)])
             df = df.append(df_1.loc[excludeListings(df_1, keywords), :])
 
         # Trim to <num> results
         df = df.iloc[:num, :]
-
-    # Sort listing results
-    df = df.sort_values(by=['timestamp'], ascending=False)
 
     df['no.'] = [i for i in range(1, df.shape[0]+1)][::-1]
     return df[columns_order]
