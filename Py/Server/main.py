@@ -63,7 +63,8 @@ def start(wb_name):
                 response = searchCarousell(
                     base_url_filter, requestPayload(query, num))
                 df = allListings(response, query, num, list(
-                    map(str.strip, exclude.split(','))))
+                    map(str.strip, exclude.split(','))),
+                    base_url_filter)
 
                 sheet = newWorksheet(wb, query)
                 df, new_listings_num = updatedListings(df, sheet)
@@ -174,6 +175,18 @@ def hostServer(wb_name=''):
     def _test():
         try:
             print('testing')
+            return '--End--', 0
+        except Exception as e:
+            print(f'{e}')
+            return '--Error--', 400
+
+    @app.route('/arg')
+    def _arg():
+        def inner_func():
+            print('hello_inner')
+        try:
+            inner_func()
+            print(request.args)
             return '--End--', 0
         except Exception as e:
             print(f'{e}')

@@ -57,3 +57,8 @@ Requirements :
     - Server > return server object
     - Google
     - Carousell
+
+### V8
+
+- ordered listing results
+- TO pass API urls between modules

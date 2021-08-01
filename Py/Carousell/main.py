@@ -57,7 +57,7 @@ def listingInfo(result):
     d.update(temp)
     return d
 
-def allListings(response, query, num, keywords):
+def allListings(response, query, num, keywords, base_url_search):
     columns_order = ['no.', 'timestamp', 'status', 'title',
                      'url', 'price (S$)', 'state', 'body', 'meetup', 'user', 'img']
     df = pd.DataFrame([listingInfo(i['listingCard'])
@@ -70,7 +70,7 @@ def allListings(response, query, num, keywords):
         response_1 = response
         while df.shape[0] < num:
             # print(df.shape[0])
-            base_url_search = 'https://www.carousell.sg/api-service/search/search/3.3/products/'
+            # base_url_search = 'https://www.carousell.sg/api-service/search/search/3.3/products/'
             response_1 = searchCarousell_cont(
                 response_1, base_url_search, requestPayload(query, num))
             df_1 = pd.DataFrame([listingInfo(i['listingCard'])
@@ -79,6 +79,9 @@ def allListings(response, query, num, keywords):
 
         # Trim to <num> results
         df = df.iloc[:num, :]
+
+    # Sort listing results
+    df = df.sort_values(by=['timestamp'], ascending=False)
 
     df['no.'] = [i for i in range(1, df.shape[0]+1)][::-1]
     return df[columns_order]
