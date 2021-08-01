@@ -55,7 +55,8 @@ def start():
                 response = searchCarousell(
                     base_url_filter, requestPayload(query, num))
                 df = allListings(response, query, num, list(
-                    map(str.strip, exclude.split(','))))
+                    map(str.strip, exclude.split(','))),
+                    base_url_filter)
 
                 sheet = newWorksheet(wb, query)
                 df, new_listings_num = updatedListings(df, sheet)
