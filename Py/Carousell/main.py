@@ -80,6 +80,9 @@ def allListings(response, query, num, keywords):
         # Trim to <num> results
         df = df.iloc[:num, :]
 
+    # Sort listing results
+    df = df.sort_values(by=['timestamp'], ascending=False)
+
     df['no.'] = [i for i in range(1, df.shape[0]+1)][::-1]
     return df[columns_order]
 
