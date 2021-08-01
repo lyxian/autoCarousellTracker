@@ -20,7 +20,8 @@ def start(wb_name):
     client = spreadSheetClient()
     wb = openWorkbook_name(client, wb_name)
 
-    base_url_filter = 'https://www.carousell.sg/api-service/filter/search/3.3/products/'
+    # base_url_filter = 'https://www.carousell.sg/api-service/filter/search/3.3/products/' # un-usable
+    base_url_filter = 'https://www.carousell.sg/api-service/filter/cf/4.0/search/'
     settings_sheet = wb.worksheet('Settings')
     if len(settings_sheet.get_all_records()) == 0:
         return False, 'Stop'    # Stop Code <- No Settings
