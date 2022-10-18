@@ -78,7 +78,7 @@ def allListings(response, query, num, keywords, base_url_search):
             break
             # response_1 = searchCarousell_cont(
             #     response_1, base_url_search, requestPayload(query, num))
-            # df_1 = pd.DataFrame([listingInfo(i['listingCard']) for i in sortListingsFromResponse(response_1)])
+            # df_1 = pandas.DataFrame([listingInfo(i['listingCard']) for i in sortListingsFromResponse(response_1)])
             # df = df.append(df_1.loc[excludeListings(df_1, keywords), :])
 
         # Trim to <num> results
@@ -127,3 +127,85 @@ def getLocation(listing_id):
         return location_name, locations
     else:
         raise Exception('Failed to get location...')
+
+# ===== GOOGLE-API =====
+
+def updatedListings(new_df, sheet):
+    retry_times = len(sheet.get_all_records())
+    if sheet.get_all_records() == []:
+        # Empty Sheet
+        return new_df, new_df.shape[0]
+    else:
+        # Locate Start Point
+        new_df = new_df.reset_index(drop=True)
+        records = sheet.get_all_records()
+        urls = [rec['url'] for rec in records]
+        for url in urls[:retry_times]:
+            # Found
+            if new_df.loc[new_df['url'] == url, :].shape[0] >= 1:
+                new_count = new_df[new_df['url'] == url].index[-1]
+                new_df = new_df.iloc[:new_count, :]
+                # Update Index of "new_df"
+                start = records[0]['no.'] + 1
+                new_df.loc[:, 'no.'] = [
+                    i for i in range(start, start+new_count)][::-1]
+                # Add rest of records
+                new_df = new_df.append(pandas.DataFrame(records))
+                return new_df, new_count
+
+        # Push entire "new_df"
+        start = records[0]['no.'] + 1
+        new_df.loc[:, 'no.'] = [i for i in range(
+            start, start+new_df.shape[0])][::-1]
+        new_df = new_df.append(pandas.DataFrame(records))
+        return new_df, new_df.shape[0]
+
+def sheetPayload(df):
+    return [df.columns.tolist()] + df.values.tolist()
+
+def sheetStatus_all(sheet):    # Update Past Listings Every 8 Hours
+    new_df = pandas.DataFrame(sheet.get_all_values()[1:], columns=sheet.get_all_values()[0])
+    # Check for last updated row + Check Status
+    urls = new_df.loc[new_df.loc[:, 'status'].apply(lambda x: x not in ['-', 'MIA', 'Sold']), 'url']
+
+    if len(urls) != 0:
+        checkResults = [checkStatus(re.search(r'/p/(.*)', url).group(1)) for url in urls]
+        new_df.loc[new_df.loc[:, 'status'].apply(lambda x: x not in ['-', 'MIA', 'Sold']), 'status'] = checkResults
+        sheet.update(sheetPayload(new_df))
+        return f'{sheet.title} (all) : {len(checkResults)-len([i for i in checkResults if i == "-"])}/{len(checkResults)} listing status updated'
+    else:
+        return 'Already Updated'
+
+def sheetStatus_new(sheet, num):    # Update '-' Every Hour
+    new_df = pandas.DataFrame(sheet.get_all_values()[1:], columns=sheet.get_all_values()[0])
+    # Check for last updated row + Check Status
+    check_range = new_df.loc[:, 'status'] == '-'
+    if num != 0:
+        check_range[:num] = [False for _ in range(num)]
+    urls = new_df.loc[check_range, 'url']
+
+    if len(urls) != 0:
+        #checkResults = [checkStatus([url[0], re.search(r'/p/(.*)', url[1]).group(1)]) for url in enumerate(urls)]
+        checkResults = [checkStatus(re.search(r'/p/(.*)', url).group(1)) for url in urls]
+        new_df.loc[check_range, 'status'] = checkResults
+        sheet.update(sheetPayload(new_df))
+        return f'{sheet.title} (new) : {len(checkResults)-len([i for i in checkResults if i == "-"])}/{len(checkResults)} listing status updated'
+    else:
+        return 'Already Updated'
+
+def checkStatus(listing_id):
+    base_url_listing = f'https://www.carousell.sg/api-service/listing/3.1/listings/{listing_id}/detail/'
+    try:
+        resp = requests.get(base_url_listing).json()
+    except:
+        #print(f'{listing_id} [Failed]')
+        return '-'
+    if 'screens' in resp['data'].keys():
+        if resp['data']['screens'][0]['ui_rules']['actions']['primary_button']['button_text'] == 'Sold':
+            return 'Sold'
+        elif resp['data']['screens'][0]['ui_rules']['actions']['primary_button']['button_text'] == 'Reserved':
+            return 'Close'
+        else:
+            return 'Open'
+    else:
+        return 'MIA'
