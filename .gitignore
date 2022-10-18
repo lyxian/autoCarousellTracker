@@ -9,3 +9,7 @@
 .venv
 
 .test
+
+templates
+rqmt.txt
+tmp.py
