@@ -12,16 +12,28 @@ import pytz
 import json
 import re
 
-def requestPayload(query: str, num: int) -> dict:
+def paginationHelper():
     return {
-        "count": num,
-        "countryCode": "SG",
-        "countryId": "1880251",
-        "filters": [],
-        "isFreeItems": False,
-        "locale": "en",
-        "prefill": {"prefill_sort_by": ""},
-        "query": query
+        'enforce': True,
+        'fieldName': 'collections',
+        'idsOrKeywords': { 'value': ['0'] }
+    }
+
+def requestPayload(query, querySize):
+
+    return {
+        'bestMatchEnabled': True,
+        'canChangeKeyword': False,
+        'count': querySize,
+        'countryCode': 'SG',
+        'countryId': '1880251',
+        'filters': [paginationHelper() for _ in range(1)],
+        'includeEducationBanner': True,
+        'includeSuggestions': False,
+        'locale': 'en',
+        'query': query,
+        "prefill": {},
+        "sortParam": {},
     }
 
 def searchCarousell(base_url_filter, payload):

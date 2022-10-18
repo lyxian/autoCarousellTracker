@@ -5,7 +5,6 @@ import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from Google.main import *
 from Carousell.main import *
-from utils.location.fromListing import getLocation
 from datetime import datetime
 from functools import reduce
 import pandas as pd
@@ -15,13 +14,36 @@ import pytz
 import json
 import re
 
+def requiredHeaders():
+    session = requests.Session()
+    url = 'https://www.carousell.sg/'
+    response = session.get(url)
+    if response.ok:
+        cookies = session.cookies.get_dict()
+        headers = {
+            'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36',
+            'cookie': '_csrf={}'.format(cookies['_csrf']), # '; '.join([f'{i[0]}={i[1]}' for i in cookies.items()]),
+        }
+        response = session.get(url, headers=headers)
+        if response.ok:
+            appState = json.loads(re.search(r'.*Application":({[^}]*}).*', response.text).group(1))
+        else:
+            print('No cookies..')
+            return ''
+        headers['csrf-token'] = appState['csrfToken']
+        return headers
+    else:
+        print('No cookies..')
+        return ''
+
 def start(wb_name):
     check_interval = 3  # hours
     client = spreadSheetClient()
     wb = openWorkbook_name(client, wb_name)
 
     # base_url_filter = 'https://www.carousell.sg/api-service/filter/search/3.3/products/' # un-usable
-    base_url_filter = 'https://www.carousell.sg/api-service/filter/cf/4.0/search/'
+    # base_url_filter = 'https://www.carousell.sg/api-service/filter/cf/4.0/search/'
+    base_url_filter = 'https://www.carousell.sg/ds/filter/cf/4.0/search/?_path=/cf/4.0/search/'
     settings_sheet = wb.worksheet('Settings')
     if len(settings_sheet.get_all_records()) == 0:
         return False, 'Stop'    # Stop Code <- No Settings
@@ -39,8 +61,7 @@ def start(wb_name):
     settings[0]['Last Ran On'] = datetime.strftime(
         datetime.now(tz=pytz.timezone('Singapore')), '%Y/%m/%d %I:%M %p')
     # System Message
-    print(
-        f'{settings[0]["Last Ran On"]} : {queries} [Next Run in {delay} mins]')
+    print(f'{settings[0]["Last Ran On"]} : {queries} [Next Run in {delay} mins]')
 
     # Wait for Query
     if queries == []:
@@ -56,13 +77,26 @@ def start(wb_name):
 
     checkedSheets = set()
 
+    headers = requiredHeaders()
     for query, exclude in zip(queries, excludes):
         if query != '':
             try:
                 idx = queries.index(query)
-                response = searchCarousell(
-                    base_url_filter, requestPayload(query, num))
-                df = allListings(response, query, num, list(
+
+                payload = requestPayload(query, num)
+                response = requests.post(base_url_filter, json=payload, headers=headers)
+                if response.status_code == 200:
+                    try:
+                        data = response.json()
+                    except Exception as e:
+                        print(e); raise e
+                elif response.status_code >= 500:
+                    e = 'Server-side error'
+                    print(e); raise e
+                else:
+                    e = 'Client-side error'
+                    print(e); raise e
+                df = allListings(data, query, num, list(
                     map(str.strip, exclude.split(','))),
                     base_url_filter)
 
@@ -124,7 +158,6 @@ def start(wb_name):
 # not required for WEB : PUBLIC_URL + cmd
 def hostServer(wb_name=''):
     app = Flask(__name__)
-    # PUBLIC_URL = 'https://262e7dc94ddb.ngrok.io/'
 
     @app.route('/start')
     def _start():
@@ -171,14 +204,19 @@ def hostServer(wb_name=''):
         except:
             pass
 
-    @app.route('/test')
+    @app.route('/test', methods=['GET'])
     def _test():
-        try:
-            print('testing')
-            return '--End--', 0
-        except Exception as e:
-            print(f'{e}')
-            return '--Error--', 400
+        if request.method == 'GET':
+            try:
+                target = f'Automated Carousell-Staging'
+                print('Starting app...')
+                success, cmd = start(target)
+                return {'status': 'OK'}, 200
+            except Exception as e:
+                print(f'Error: {e}')
+                return {'status': 'NOT_OK'}, 400
+        else:
+            return {'ERROR': 'Nothing here!'}, 404
 
     @app.route('/arg')
     def _arg():
