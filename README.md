@@ -27,6 +27,7 @@ Requirements :
 - v6 - breaking down main code + add "meet-up" column + client_secret & key in ENV
 - v7 - transition from worker->web to reduce up-time
 - v8 - configure routing to include params + exception not propagated to logs
+- v9 - migrate to new API endpoint and payload (pure API vs. html with API)
 
 ## Bugs / Non-Bugs
 
@@ -62,3 +63,10 @@ Requirements :
 
 - ordered listing results
 - TO pass API urls between modules
+
+### V9
+
+- migrate to new API endpoint and payload (pure API vs. html with API)
+- new workflow :
+  - required headers : `cookie`, `csrf-token`
+  - .
